@@ -910,6 +910,17 @@ typedef enum {
 	}
 } // handleExtensionData
 
+-(void) matchIRPoints
+{
+    
+}
+-(void) updateTrackedPosition
+{
+    
+    
+}
+
+
 - (void) handleIRData:(unsigned char *) dp length:(size_t) dataLength
 {
 	
@@ -962,6 +973,9 @@ typedef enum {
 			}
 		}
 	}
+    
+    //[self matchIRPoints];
+    //[self updateTrackedPosition];
 	
 //	NSLogDebug (@"p1=%i ; p2=%i", p1, p2);
 
