@@ -45,9 +45,25 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		9E65733310EB2550001AE02D /* GridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E65733210EB2550001AE02D /* GridView.m */; };
 		9EC9170410E9438A00CC575F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EC9170310E9438A00CC575F /* Quartz.framework */; };
-		FC2F9C490F0E048000E822CC /* WiiRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2F9C480F0E048000E822CC /* WiiRemote.framework */; };
-		FC2F9C500F0E048700E822CC /* WiiRemote.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC2F9C480F0E048000E822CC /* WiiRemote.framework */; };
+		C401439B14D422AA00A27147 /* WiiRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C401439814D420F200A27147 /* WiiRemote.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C401439714D420F200A27147 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C401439014D420F200A27147 /* WiiRemoteFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = WiiRemoteFramework;
+		};
+		C401439914D4229800A27147 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C401439014D420F200A27147 /* WiiRemoteFramework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = WiiRemoteFramework;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		5314496F0B303BEC00757188 /* CopyFiles */ = {
@@ -56,7 +72,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FC2F9C500F0E048700E822CC /* WiiRemote.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,7 +116,7 @@
 		9E65733110EB2550001AE02D /* GridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridView.h; sourceTree = "<group>"; };
 		9E65733210EB2550001AE02D /* GridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridView.m; sourceTree = "<group>"; };
 		9EC9170310E9438A00CC575F /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
-		FC2F9C480F0E048000E822CC /* WiiRemote.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = WiiRemote.framework; path = ../WiiRemoteFramework/build/Debug/WiiRemote.framework; sourceTree = SOURCE_ROOT; };
+		C401439014D420F200A27147 /* WiiRemoteFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = WiiRemoteFramework.xcodeproj; path = ../../WiiRemoteFramework/trunk/WiiRemoteFramework.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,11 +124,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C401439B14D422AA00A27147 /* WiiRemote.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				53C576B60B2497D500D36527 /* OpenGL.framework in Frameworks */,
 				531447F60B3010A900757188 /* ApplicationServices.framework in Frameworks */,
 				53FA54E90B3AD41A003B73F3 /* Carbon.framework in Frameworks */,
-				FC2F9C490F0E048000E822CC /* WiiRemote.framework in Frameworks */,
 				9EC9170410E9438A00CC575F /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,7 +156,6 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FC2F9C480F0E048000E822CC /* WiiRemote.framework */,
 				53FA54D40B3AD41A003B73F3 /* Carbon.framework */,
 				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
 				531447E10B3010A900757188 /* ApplicationServices.framework */,
@@ -210,6 +224,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C401439014D420F200A27147 /* WiiRemoteFramework.xcodeproj */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -239,6 +254,14 @@
 			name = docs;
 			sourceTree = "<group>";
 		};
+		C401439114D420F200A27147 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C401439814D420F200A27147 /* WiiRemote.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -254,6 +277,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C401439A14D4229800A27147 /* PBXTargetDependency */,
 			);
 			name = DarwiinRemote;
 			productInstallPath = "$(HOME)/Applications";
@@ -271,13 +295,16 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* WiiRemote */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C401439114D420F200A27147 /* Products */;
+					ProjectRef = C401439014D420F200A27147 /* WiiRemoteFramework.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* DarwiinRemote */,
@@ -285,6 +312,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C401439814D420F200A27147 /* WiiRemote.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = WiiRemote.framework;
+			remoteRef = C401439714D420F200A27147 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D1107290486CEB800E47090 /* Resources */ = {
@@ -342,6 +379,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C401439A14D4229800A27147 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = WiiRemoteFramework;
+			targetProxy = C401439914D4229800A27147 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
@@ -407,11 +452,13 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../WiiRemoteFramework/build/Debug\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../WiiRemoteFramework-trunk/build/Debug\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../WiiRemoteFramework/build/Debug\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../WiiRemoteFramework/build/Release\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../WiiRemoteFramework-trunk/build/Debug\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../WiiRemoteFramework-trunk/build/Release\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/WiiRemoteFramework-dweqmtieaankmrdfgbogriamjpxq/Build/Products/Debug\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -419,7 +466,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = DarwiinRemote;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -448,18 +495,20 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../WiiRemoteFramework-trunk/build/Release\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../WiiRemoteFramework-trunk/build/Debug\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../WiiRemoteFramework-trunk/build/Debug\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../WiiRemoteFramework-trunk/build/Release\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/WiiRemoteFramework-dweqmtieaankmrdfgbogriamjpxq/Build/Products/Debug\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = DarwiinRemote;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

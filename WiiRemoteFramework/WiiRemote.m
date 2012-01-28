@@ -940,11 +940,12 @@ typedef enum {
 		}
 	}
 
-//	NSLogDebug (@"IR Data (%i, %i, %i) (%i, %i, %i) (%i, %i, %i) (%i, %i, %i)",
-//		  irData[0].x, irData[0].y, irData[0].s,
-//		  irData[1].x, irData[1].y, irData[1].s,
-//		  irData[2].x, irData[2].y, irData[2].s,
-//		  irData[3].x, irData[3].y, irData[3].s);
+/*	NSLogDebug (@"IR Data (%i, %i, %i) (%i, %i, %i) (%i, %i, %i) (%i, %i, %i)",
+		  irData[0].x, irData[0].y, irData[0].s,
+		  irData[1].x, irData[1].y, irData[1].s,
+		  irData[2].x, irData[2].y, irData[2].s,
+		  irData[3].x, irData[3].y, irData[3].s);
+		  */
 
 	/* Determine 2 out of 4 points to be used for position calculations  */
 	int p1 = -1;
@@ -1010,7 +1011,8 @@ typedef enum {
 			gain = 1 / (1 - d/kWiiIRPixelsHeight);
 		
 		ox *= gain;
-		oy *= gain;		
+		oy *= gain;	
+
 //		NSLog(@"x:%5.2f;  y: %5.2f;  angle: %5.1f\n", ox, oy, angle*180/M_PI);
 	} else {
 		ox = oy = -100;
@@ -1018,6 +1020,12 @@ typedef enum {
 			//	printf("Not tracking.\n");
 			leftPoint = -1;
 		}
+	}
+	
+	if ( p1 != -1 )
+	{
+		ox = 1 - irData[p1].x / 512.0;
+		oy = 1 - irData[p1].y / 384.0;
 	}
 	
 	if ([_delegate respondsToSelector:@selector (irPointMovedX:Y:)])
@@ -1559,6 +1567,7 @@ typedef enum {
 	unsigned char * dp = (unsigned char *) dataPointer;
 
 #ifdef DEBUG	
+	_dump = NO;
 	if (_dump) {
 		int i;
 		printf ("channel:%i - ack%3u:", [l2capChannel getPSM], (unsigned int)dataLength);
