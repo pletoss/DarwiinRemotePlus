@@ -117,7 +117,8 @@ typedef enum {
     eTopLeft = 0,
     eBottomLeft = 1,
     eBottomRight = 2,
-    eTopRight = 3
+    eTopRight = 3,
+    eUndefined = 4
 } IRMotionPointType;
 
 @interface WiiRemote : NSObject
@@ -197,7 +198,8 @@ typedef enum {
     // Mouse_Postion = Pos(Tracked_Point) + Diff(Tracked_Point, Reference_point)
     // While updating the Diff-Function every time the Reference Point is visible together with some other point. 
     // In doubt, the first tracked point is the reference point and is adjusted as it becomes obvious that the assumption was invalid
-        
+    
+    float trackedX, trackedY;
     
 	double _batteryLevel;
 	double _warningBatteryLevel;

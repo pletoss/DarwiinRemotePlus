@@ -912,11 +912,103 @@ typedef enum {
 
 -(void) matchIRPoints
 {
+    int numSeenPoints = 0;
+    
+    IRMotionPointType matches[4] = {eUndefined, eUndefined, eUndefined, eUndefined} ;
+    
+    // nearest-point matching of irData[i] with matchedIRData[j]
+    for (int i=0 ; i<4 ; i++) {
+        if ( irData[i].s < 0x0F )
+        {
+            for (int j=0; j<4; j++)
+            {
+                if ( ( matches[i] == eUndefined ) ||
+                    ( 
+                     hypot(irData[i].x - matchedIRData[matches[i]].x, irData[i].y - matchedIRData[matches[i]].y) >
+                     hypot(irData[i].x - matchedIRData[j].x, irData[i].y - matchedIRData[j].y)
+                     )
+                    )
+                {
+                    matches[i] = j;
+                }
+            }
+        }        
+	
+        
+        prevPositions[i] = matchedIRData[i];
+        matchedIRData[i].s = 0xFF;
+        if ( matches[i] != eUndefined )
+        {
+            matchedIRData[matches[i]] = irData[i];
+        }
+    }
+    
+    // geometric verification step
+    
+    // if all 4 points visible -> obvious
+    
+    if ( numSeenPoints == 4 )
+    {
+        for (int i = 0; i < 4; i++)
+        {
+        }
+    }
+    
+    [self setLEDEnabled1:matchedIRData[0].s < 0x0F 
+                enabled2:matchedIRData[1].s < 0x0F 
+                enabled3:matchedIRData[2].s < 0x0F 
+                enabled4:matchedIRData[3].s < 0x0F];
+
+    
+    
     
 }
 -(void) updateTrackedPosition
 {
+    IRMotionPointType lastTrackedPoint = trackedPoint;
+    IRData lastTrackedIRData = matchedIRData[trackedPoint];
     
+    [self matchIRPoints];
+    
+    IRMotionPointType ref = eBottomLeft;
+
+    // wahle eins der sichtbaren punkte als tracking point zum berechnen der getrackten position
+    for (int i = 0; i < 4; i++)
+    {
+        if ( matchedIRData[i].s < 0x0F )
+        {
+            trackedPoint = i;
+            break;
+        }
+    }
+    
+    // bevorzuge den refenence point als tracking punkt
+    if ( matchedIRData[ref].s < 0x0F )
+    {
+        trackedPoint = ref;
+    }
+        
+    for (int i = 0; i < 4; i++)
+    {
+        if ( ( i != trackedPoint ) && ( matchedIRData[i].s < 0x0F ) )
+        {
+            irPointDistance[i].x = lastTrackedIRData.x - matchedIRData[i].x;    
+            irPointDistance[i].y = lastTrackedIRData.y - matchedIRData[i].y;    
+        }
+    }
+
+    int x = irPointDistance[trackedPoint].x + matchedIRData[trackedPoint].x;
+    int y = irPointDistance[trackedPoint].y + matchedIRData[trackedPoint].y;
+    
+    // try to bring the referece point back to absolute zero by slowly interpolating
+    // all other don't
+    if ( trackedPoint == ref && ( (irPointDistance[ref].x > 0) || (irPointDistance[ref].y > 0) ) )
+    {
+        irPointDistance[ref].x *= 0.9;
+    }
+    
+    trackedX = 1 - x / 1024.0;
+    trackedY = 1 - y / 768.0;    
     
 }
 
@@ -958,92 +1050,10 @@ typedef enum {
 		  irData[3].x, irData[3].y, irData[3].s);
 		  */
 
-	/* Determine 2 out of 4 points to be used for position calculations  */
-	int p1 = -1;
-	int p2 = -1;
-	// we should modify this loop to take the points with the lowest s (the brightest ones)
-	for (i=0 ; i<4 ; i++) {
-		if (p1 == -1) {
-			if (irData [i].s < 0x0F)
-				p1 = i;
-		} else {
-			if (irData [i].s < 0x0F) {
-				p2 = i;
-				break;
-			}
-		}
-	}
-    
-    //[self matchIRPoints];
-    //[self updateTrackedPosition];
-	
-//	NSLogDebug (@"p1=%i ; p2=%i", p1, p2);
-
-	double ox, oy;
-	/* Verify wether there exists two points allowing us to do proper tracking */
-	if ((p1 > -1) && (p2 > -1)) {
-		/* Determine left and right point??? */
-		int l = leftPoint;
-		if (leftPoint == -1) {
-			switch (orientation) {
-				case 0: l = (irData[p1].x < irData[p2].x) ? 0 : 1; break;
-				case 1: l = (irData[p1].y > irData[p2].y) ? 0 : 1; break;
-				case 2: l = (irData[p1].x > irData[p2].x) ? 0 : 1; break;
-				case 3: l = (irData[p1].y < irData[p2].y) ? 0 : 1; break;
-			}
-
-			leftPoint = l;
-		}
-		
-		int r = 1-l;
-		
-		/* Calculate space between point L,R  */
-		double dx = irData[r].x - irData[l].x;
-		double dy = irData[r].y - irData[l].y;
-		/* http://en.wikipedia.org/wiki/Atan2#The_hypot_function */
-		double d = hypot (dx, dy);
-
-		/* Normalize distances */
-		dx /= d;
-		dy /= d;
-
-		/* RvdZ: What is happening over here? */
-		double cx = (irData[l].x + irData[r].x)/kWiiIRPixelsWidth - 1;
-		double cy = (irData[l].y + irData[r].y)/kWiiIRPixelsHeight - 1;
-		
-		/* RvdZ: What is happening over here? */
-		ox = -dy*cy-dx*cx;
-		oy = -dx*cy+dy*cx;
-
-		// cam:
-		// Compensate for distance. There must be fewer than 0.75*768 pixels between the spots for this to work.
-		// In other words, you have to be far enough away from the sensor bar for the two spots to have enough
-		// space on the image sensor to travel without one of the points going off the image.
-		// note: it is working very well ...
-		double gain = 4;
-		if (d < (0.75 * kWiiIRPixelsHeight)) 
-			gain = 1 / (1 - d/kWiiIRPixelsHeight);
-		
-		ox *= gain;
-		oy *= gain;	
-
-//		NSLog(@"x:%5.2f;  y: %5.2f;  angle: %5.1f\n", ox, oy, angle*180/M_PI);
-	} else {
-		ox = oy = -100;
-		if (leftPoint != -1) {
-			//	printf("Not tracking.\n");
-			leftPoint = -1;
-		}
-	}
-	
-	if ( p1 != -1 )
-	{
-		ox = 1 - irData[p1].x / 512.0;
-		oy = 1 - irData[p1].y / 384.0;
-	}
-	
+    [self updateTrackedPosition];
+    	
 	if ([_delegate respondsToSelector:@selector (irPointMovedX:Y:)])
-		[_delegate irPointMovedX:ox Y:oy];
+		[_delegate irPointMovedX:trackedX Y:trackedY];
 
 	if ([_delegate respondsToSelector:@selector (rawIRData:)])
 		[_delegate rawIRData:irData];
