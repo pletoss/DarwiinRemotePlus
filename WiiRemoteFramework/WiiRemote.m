@@ -912,30 +912,36 @@ typedef enum {
 
 -(void) matchIRPoints
 {
+    IRMotionPointType ref = eTopLeft;
+
     int numSeenPoints = 0;
     
     IRMotionPointType matches[4] = {eUndefined, eUndefined, eUndefined, eUndefined} ;
+    float confidence[4] = {0,0,0,0};    // how confident are we that this REALLY is the Top-Left/Bottom-Left and so on point ?
     
     // nearest-point matching of irData[i] with matchedIRData[j]
+    // if matchedIRData didn't have the point yet ( not visible before )
     for (int i=0 ; i<4 ; i++) {
         if ( irData[i].s < 0x0F )
         {
+            numSeenPoints++;
             for (int j=0; j<4; j++)
             {
+                float ijDist = hypot(irData[i].x - matchedIRData[j].x, irData[i].y - matchedIRData[j].y);
+                float oldDist = hypot(irData[i].x - matchedIRData[matches[i]].x, irData[i].y - matchedIRData[matches[i]].y);
+                
                 if ( ( matches[i] == eUndefined ) ||
-                    ( 
-                     hypot(irData[i].x - matchedIRData[matches[i]].x, irData[i].y - matchedIRData[matches[i]].y) >
-                     hypot(irData[i].x - matchedIRData[j].x, irData[i].y - matchedIRData[j].y)
-                     )
-                    )
+                    ( oldDist > ijDist ) )
                 {
                     matches[i] = j;
+                    // update confidence
+                    confidence[i] = 100.0 / ijDist;
                 }
             }
         }        
 	
         
-        prevPositions[i] = matchedIRData[i];
+        //prevPositions[i] = matchedIRData[i];
         matchedIRData[i].s = 0xFF;
         if ( matches[i] != eUndefined )
         {
@@ -946,13 +952,24 @@ typedef enum {
     // geometric verification step
     
     // if all 4 points visible -> obvious
-    
     if ( numSeenPoints == 4 )
     {
         for (int i = 0; i < 4; i++)
         {
         }
     }
+
+    // if only 2 points visible -> if one of them is known -> infer the other one
+    // else, assume the reference-point is visible and infer the other one
+    if ( numSeenPoints == 2 )
+    {
+        
+    }
+    
+    // if 1 point visible than use matched one, 
+    // if no match yet, assume it's the reference point
+    
+    
     
     [self setLEDEnabled1:matchedIRData[0].s < 0x0F 
                 enabled2:matchedIRData[1].s < 0x0F 
@@ -965,14 +982,17 @@ typedef enum {
 }
 -(void) updateTrackedPosition
 {
+    IRMotionPointType ref = eTopLeft;
+
     IRMotionPointType lastTrackedPoint = trackedPoint;
-    IRData lastTrackedIRData = matchedIRData[trackedPoint];
+//    IRData lastTrackedIRData = matchedIRData[lastTrackedPoint];
     
     [self matchIRPoints];
     
-    IRMotionPointType ref = eBottomLeft;
 
-    // wahle eins der sichtbaren punkte als tracking point zum berechnen der getrackten position
+    trackedPoint = eUndefined;
+    
+    // waehle eins der sichtbaren punkte als tracking point zum berechnen der getrackten position
     for (int i = 0; i < 4; i++)
     {
         if ( matchedIRData[i].s < 0x0F )
@@ -988,28 +1008,32 @@ typedef enum {
         trackedPoint = ref;
     }
         
+    // Update all visible points Difference Vector to the tracked Point
     for (int i = 0; i < 4; i++)
     {
-        if ( ( i != trackedPoint ) && ( matchedIRData[i].s < 0x0F ) )
+        // don't adjust the tracked Points Difference Vector unless we switched tracking Points !
+        if ( ( i != lastTrackedPoint ) && ( matchedIRData[i].s < 0x0F ) )
         {
-            irPointDistance[i].x = lastTrackedIRData.x - matchedIRData[i].x;    
-            irPointDistance[i].y = lastTrackedIRData.y - matchedIRData[i].y;    
+            irPointDistance[i].x = lastX - matchedIRData[i].x;    
+            irPointDistance[i].y = lastY - matchedIRData[i].y;    
         }
     }
 
-    int x = irPointDistance[trackedPoint].x + matchedIRData[trackedPoint].x;
-    int y = irPointDistance[trackedPoint].y + matchedIRData[trackedPoint].y;
-    
-    // try to bring the referece point back to absolute zero by slowly interpolating
-    // all other don't
-    if ( trackedPoint == ref && ( (irPointDistance[ref].x > 0) || (irPointDistance[ref].y > 0) ) )
+    if ( trackedPoint != eUndefined )
     {
-        irPointDistance[ref].x *= 0.9;
+        lastX = irPointDistance[trackedPoint].x + matchedIRData[trackedPoint].x;
+        lastY = irPointDistance[trackedPoint].y + matchedIRData[trackedPoint].y;
+        
+        // try to bring the referece point back to absolute zero by slowly interpolating
+        // all other points don't do this -> reference point = absolute zero !
+        if ( trackedPoint == ref && ( (irPointDistance[ref].x > 0) || (irPointDistance[ref].y > 0) ) )
+        {
+            irPointDistance[ref].x *= 0.8;
+        }
+        
+        trackedX = 1 - lastX / 1024.0;
+        trackedY = 1 - lastY / 768.0;    
     }
-    
-    trackedX = 1 - x / 1024.0;
-    trackedY = 1 - y / 768.0;    
-    
 }
 
 

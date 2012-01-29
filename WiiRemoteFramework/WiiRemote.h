@@ -184,7 +184,7 @@ typedef enum {
 
     
     IRData matchedIRData[4];    
-    IRData prevPositions[4];    
+    //IRData prevPositions[4];    
     
     // distance of each detected IR point to the bottom-left-point. Used for making the transition between tracked points seamless.
     IRData irPointDistance[4];    
@@ -198,6 +198,8 @@ typedef enum {
     // Mouse_Postion = Pos(Tracked_Point) + Diff(Tracked_Point, Reference_point)
     // While updating the Diff-Function every time the Reference Point is visible together with some other point. 
     // In doubt, the first tracked point is the reference point and is adjusted as it becomes obvious that the assumption was invalid
+    
+    int lastX, lastY;
     
     float trackedX, trackedY;
     
