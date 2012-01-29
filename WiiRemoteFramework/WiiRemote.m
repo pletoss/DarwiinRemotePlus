@@ -919,6 +919,30 @@ typedef enum {
     IRMotionPointType matches[4] = {eUndefined, eUndefined, eUndefined, eUndefined} ;
     float confidence[4] = {0,0,0,0};    // how confident are we that this REALLY is the Top-Left/Bottom-Left and so on point ?
     
+    /*
+     
+     Problemstellung:
+     
+     Sei M1 = { a1, a2, a3, a4 }, M2 = { b1, b2, b3, b4}, a_i, b_i \in R^2 zwei mengen von 4 punkte;
+     
+     M1 = irData (current points), M2 = matchedIRData ( prev points )
+     
+     finde eine Zuordnung f : M1 -> M2, so dass:
+     
+     f - bijektiv UND, ( d.h. f(a_i) != f(a_j) fuer jedes i,j in 1...4, und \exists f(a_i) fuer jedes i in 1..4) 
+     
+     Summe d(a_i, f(a_i)) = Min, fuer i \n 1...4      
+     
+    
+     Solve using voting algorithm:
+
+     sei prob( a_i, b_j ) = wahrscheinlichkeit, dass a_i = b_j
+     
+     prob( a_i, b_j ) = ( 100.0 / ijDist ) + ???
+     
+     
+     */
+    
     // nearest-point matching of irData[i] with matchedIRData[j]
     // if matchedIRData didn't have the point yet ( not visible before )
     for (int i=0 ; i<4 ; i++) {
@@ -939,15 +963,35 @@ typedef enum {
                 }
             }
         }        
-	
         
         //prevPositions[i] = matchedIRData[i];
         matchedIRData[i].s = 0xFF;
-        if ( matches[i] != eUndefined )
-        {
-            matchedIRData[matches[i]] = irData[i];
-        }
+//        if ( matches[i] != eUndefined )
+//        {
+//            matchedIRData[matches[i]] = irData[i];
+//        }
     }
+    
+    // sort after confidence and reasign from lowest 
+
+    // see if we have any clashes
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+        {
+            if ( matches[i] == matches[j] )
+            {
+                // the one with bigger confidence wins
+                int winner = j, looser = i;
+                if (confidence[i] > confidence[j])
+                {
+                    winner = i; looser = j;                    
+                }
+                
+                // the looser gets reassigned
+                
+            }
+        }
+    
     
     // geometric verification step
     
@@ -989,7 +1033,6 @@ typedef enum {
     
     [self matchIRPoints];
     
-
     trackedPoint = eUndefined;
     
     // waehle eins der sichtbaren punkte als tracking point zum berechnen der getrackten position
