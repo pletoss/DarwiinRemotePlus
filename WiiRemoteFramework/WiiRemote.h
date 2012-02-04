@@ -182,6 +182,7 @@ typedef enum {
     //
     // YEAH! :P
 
+    int counter;
     
     IRData matchedIRData[4];    
     //IRData prevPositions[4];    
