@@ -86,8 +86,6 @@ typedef enum {
 	WiiClassicControllerPlusButton
 } WiiButtonType;
 
-unsigned char mii_data_buf[WIIMOTE_MII_DATA_BYTES_PER_SLOT + 16];
-unsigned short mii_data_offset;
 
 typedef enum {
 	WiiExpUknown,
@@ -112,14 +110,6 @@ typedef enum {
 	WiiClassicControllerLeftJoyStick	= 1,
 	WiiClassicControllerRightJoyStick	= 2
 } WiiJoyStickType;
-
-typedef enum {
-    eTopLeft = 0,
-    eBottomLeft = 1,
-    eBottomRight = 2,
-    eTopRight = 3,
-    eUndefined = 4
-} IRMotionPointType;
 
 @interface WiiRemote : NSObject
 {
@@ -157,52 +147,6 @@ typedef enum {
 	WiiBalanceBoardCalibData balanceBoardCalibData;
 	WiiIRModeType wiiIRMode;
 	IRData	irData[4];
-    
-    // Advanced IR Motion Tracking
-    
-    // 0 = top-left, 1 = bottom-left, 2 = bottom-right, 3 = top-right
-    // like this:
-    //
-    //     0----------3
-    //      \        /
-    //       \      /
-    //        1----2
-    //
-    // @see IRMotionPointType
-
-    // Hey, that was awesome, can i draw a cube like that ?
-    //        ________
-    //       /|      /|
-    //      /_|_____/ |
-    //     |  |     | |
-    //     |  |_____|_|
-    //     | /      | /
-    //     |/       |/
-    //      --------
-    //
-    // YEAH! :P
-
-    int counter;
-    
-    IRData matchedIRData[4];    
-    //IRData prevPositions[4];    
-    
-    // distance of each detected IR point to the bottom-left-point. Used for making the transition between tracked points seamless.
-    IRData irPointDistance[4];    
-
-    // The Point currently used for computing the Mouse Position
-    IRMotionPointType trackedPoint;
-        
-    // Ideea: reference point = bottom-left
-    // If the reference point is not visible, 
-    // then we use as the position the last known difference to the reference point + the tracked point position
-    // Mouse_Postion = Pos(Tracked_Point) + Diff(Tracked_Point, Reference_point)
-    // While updating the Diff-Function every time the Reference Point is visible together with some other point. 
-    // In doubt, the first tracked point is the reference point and is adjusted as it becomes obvious that the assumption was invalid
-    
-    int lastX, lastY;
-    
-    float trackedX, trackedY;
     
 	double _batteryLevel;
 	double _warningBatteryLevel;
